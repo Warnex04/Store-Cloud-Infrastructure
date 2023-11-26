@@ -1,9 +1,13 @@
 
 class Item:
-    def __init__(self, name, price, quantity):
+    def __init__(self, name, price, quantity, threshold=100):  # Added threshold with default value
         self.name = name
         self.price = price
         self.quantity = quantity
+        self.threshold = threshold  # New attribute
+
+    def is_below_threshold(self):
+        return self.quantity < self.threshold * 0.1  # Check if the quantity is below 10%
 
     def total_price(self):
         return self.price * self.quantity
