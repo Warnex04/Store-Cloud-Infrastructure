@@ -1,6 +1,8 @@
 from confluent_kafka import Producer, Consumer, KafkaError
 from pymongo import MongoClient
 import sys
+import json
+from receipt import *
 
 # Setup MongoDB Client
 mongo_client = MongoClient('localhost', 27017)
