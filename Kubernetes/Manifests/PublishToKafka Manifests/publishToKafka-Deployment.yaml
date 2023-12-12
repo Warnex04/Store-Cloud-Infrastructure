@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publish-to-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: publish-to-kafka
+  template:
+    metadata:
+      labels:
+        app: publish-to-kafka
+    spec:
+      containers:
+      - name: publish-to-kafka
+        image: your-publish-to-kafka-image
+        ports:
+        - containerPort: 5001
+        env:
+        - name: KAFKA_BROKER_URL
+          value: kafka:9092

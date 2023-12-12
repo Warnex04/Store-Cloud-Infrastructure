@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-save
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-save
+  template:
+    metadata:
+      labels:
+        app: mongodb-save
+    spec:
+      containers:
+      - name: mongodb-save
+        image: your-mongodb-save-image
+        env:
+        - name: KAFKA_BROKER_URL
+          value: kafka:9092
+        - name: MONGODB_URL
+          value: mongodb://mongo:27017/

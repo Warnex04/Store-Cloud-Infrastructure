@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: turnover-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: turnover-calc
+  template:
+    metadata:
+      labels:
+        app: turnover-calc
+    spec:
+      containers:
+      - name: turnover-calc
+        image: your-turnover-calc-image
+        env:
+        - name: MONGODB_URL
+          value: mongodb://mongo:27017/
