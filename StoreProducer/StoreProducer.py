@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Kafka configuration
 kafka_config = {
-    'bootstrap.servers': "localhost:9092"
+    'bootstrap.servers': "kafka:9092"  # Changed from localhost:9092 to kafka:9092
 }
 
 producer = Producer(kafka_config)
@@ -19,19 +19,20 @@ def generate_receipt():
         'checkoutID': random.randint(1000, 9999),
         'products': [
             {
-                'productID': random.randint(10000, 99999),
-                'quantity': random.randint(1, 10)
-            } for _ in range(random.randint(1, 5))
+                'productID': random.randint(100, 999),
+                'quantity': random.randint(1, 100),
+                'price': round(random.uniform(1.0, 100.0), 2)
+            }
+            for _ in range(random.randint(1, 10))
         ]
     }
 
-@app.route('/generate-receipt', methods=['GET'])
-def generate_and_send_receipt():
-    """ Endpoint to generate and send a receipt to Kafka """
+@app.route('/receipt', methods=['POST'])
+def post_receipt():
     receipt = generate_receipt()
     producer.produce('receipts_topic', json.dumps(receipt))
     producer.flush()
-    return jsonify({"status": "success", "receipt": receipt})
+    return jsonify(receipt), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', port=5000)

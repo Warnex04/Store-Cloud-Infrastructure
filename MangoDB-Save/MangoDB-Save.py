@@ -1,4 +1,4 @@
-from confluent_kafka import Consumer, KafkaException
+from confluent_kafka import Consumer, KafkaError  # Changed from KafkaException to KafkaError
 import json
 from pymongo import MongoClient
 
@@ -19,15 +19,14 @@ collection = db.receipts
 try:
     while True:
         msg = consumer.poll(timeout=1.0)
-        if msg is None: continue
+        if msg is None:
+            continue
         if msg.error():
-            if msg.error().code() == KafkaException._PARTITION_EOF:
-                continue
-            else:
-                print(msg.error())
-                break
-
-        receipt = json.loads(msg.value())
+            if msg.error().code() != KafkaError._PARTITION_EOF:
+                print(f"Kafka Error: {msg.error()}")
+            continue
+        
+        receipt = json.loads(msg.value().decode('utf-8'))
         collection.insert_one(receipt)
 
 except KeyboardInterrupt:
